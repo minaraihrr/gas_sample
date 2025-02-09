@@ -1,0 +1,92 @@
+<script>    
+  // ロード時
+  function onPageLoad(){
+    // プルダウンリスト生成
+    getOptionList('item_type', itemTypes);
+
+    // 月データ取得
+    getMonthData();
+
+  }
+
+  // プルダウンリスト生成
+  function getOptionList(id, options){
+    const select = document.getElementById(id);
+    select.innerHTML = options.map((option) => `<option value='${option}'>${option}</option>`).join('');
+  }
+
+  // 月データ取得
+  function getMonthData(){
+    google.script.run.withSuccessHandler(
+      function(data, element) {
+        drawList(data,'month');
+    })
+    .withFailureHandler(
+      function(msg, element) {
+        console.log('### ERROR: ' + msg.toString());
+    })
+    .withUserObject(this)
+    .getMonthData();
+  }
+
+  // 取得データからリスト作成
+  function drawList(data,tblNm){
+    const table = document.getElementById(tblNm);
+
+    // クリア
+    for (let i=table.rows.length-1; i>=1; i--){
+      table.deleteRow(i);
+    }
+
+    // 作成
+    if(!data){
+      return;
+    }
+    for (let i=0; i<data.length; i++){
+      // データをtableに追加
+      const row = table.insertRow(-1);
+      for (let j=0; j<data[i].length; j++){
+        const cell = row.insertCell(-1);
+        let text = '';
+        if (j == 0){
+          // 日付列は月日に編集
+          text = document.createTextNode(data[i][j].slice(5));
+        } else if (j == 3){
+          // 金額列はカンマ編集
+          text = document.createTextNode(Number(data[i][j]).toLocaleString());
+        } else {
+          text = document.createTextNode(data[i][j]);
+        }
+        cell.classList.add('column' + j);
+        cell.appendChild(text);
+      }
+    }
+
+  }
+
+  //データ追加
+  function addData(){
+    // フォーム入力値取得
+    const values = [];
+    const form = document.forms[0];
+    for (let i=0; i<form.length-1; i++){
+      values.push(form.elements[i].value);
+    }
+
+    google.script.run.withSuccessHandler(
+      function() {
+        // フォームクリア
+        document.getElementById('description').value = '';      // 内容
+        document.getElementById('amount').value = '';           // 金額
+        alert('記録しました！');
+
+        // 月合計データ取得
+        getMonthData();
+    })
+    .withFailureHandler(
+      function(msg) {
+        console.log(`### ERROR: ${msg.toString()}`);
+    })
+    .addData(values);
+  }
+</script>

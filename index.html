@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= HtmlService.createHtmlOutputFromFile("css").getContent(); ?>
+  </head>
+  <body onload="onPageLoad();">
+    <div class="input-form">
+      <h1>家計簿</h1>
+      
+      <form>
+        <table class="input-table">
+          <tr>
+            <th>日付</th>
+            <td><input type="date" id="date" value=<?= curtDate ?>></input></td>
+          </tr>
+          <tr>
+            <th>項目</th>
+            <td>
+              <select name="item_type" id="item_type">
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>内容</th>
+            <td><input type="text" id="description"></input></td>
+          </tr>
+          <tr>
+            <th>金額</th>
+            <td><input type="text" id="amount"></input></td>
+          </tr>
+        </table>
+        <button type="button" class="input-btn" onClick="addData();">追加</button>
+      </form>
+
+      <div>
+        <h3><?= curtYM ?></h3>
+        <table id="month" class="total-table">
+          <tr>
+            <th>日付</th>
+            <th>項目</th>
+            <th>内容</th>
+            <th>金額</th>
+          </tr>
+        </table>
+      </div>
+
+      <script>
+        const itemTypes = JSON.parse('<?!=JSON.stringify(itemTypes) ?>');
+      </script>
+      <?!= HtmlService.createHtmlOutputFromFile('js').getContent(); ?>
+    </div>
+  </body>
+</html>
