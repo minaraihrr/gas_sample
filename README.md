@@ -1,6 +1,6 @@
 ### GAS_SAMPLE
 GASでwebアプリとスプレッドシート間の登録・表示を行う家計簿サンプルアプリ  
-<img src="resources/demo.gif" width="200;">
+<img src="resources/demo.gif" width="200">
 
 ### 機能
 * webアプリの入力値をスプレッドシートに登録します  
